@@ -1,0 +1,14 @@
+.checkbox-contact__checkbox {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  clip: rect(0, 0, 0, 0);
+}
+
+.checkbox-contact__checkbox:checked + .checkbox-contact__bar {
+  border: 5px solid red;
+}
+
+.label {
+  display: none;
+}

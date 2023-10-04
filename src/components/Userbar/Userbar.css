@@ -1,0 +1,78 @@
+.user-bar {
+  height: 80px;
+  border-bottom: 2px solid #212121;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.user-bar:hover {
+  background-color: #434B4D;
+}
+
+.user-bar__image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-bar__title {
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: normal;
+  margin: 0 0 0 10px;
+}
+
+.user-bar__input-checkbox {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  clip: rect(0, 0, 0, 0);
+}
+
+.user-bar__checkbox {
+  border-radius: 50%;
+  margin: 0 15px 0 auto;
+  width: 23px;
+  height: 23px;
+  border: 1px solid red;
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: center;
+  box-sizing: border-box;
+}
+
+.user-bar__checkbox_active {
+  background-image: url('../../images/checkmarkRed.svg');
+  border: none;
+}
+
+.user-bar__buttons-box {
+  display: flex;
+  margin: 0 0 0 auto;
+}
+
+.user-bar__friend-button {
+  width: 43px;
+  height: 43px;
+  transition: opacity .1s linear;
+  margin: 0 10px 0 0;
+}
+
+.user-bar__friend-button:hover {
+  opacity: 0.7;
+}
+
+.user-bar__friend-button:last-of-type {
+  margin: 0 0 0 auto;
+}
+
+.display-none {
+  display: none;
+}

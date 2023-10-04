@@ -1,0 +1,16 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 60px;
+  width: 100%;
+  background-color: #323232;
+  padding: 0 250px;
+  box-sizing: border-box;
+}
+
+.logo {
+  width: 45px;
+  height: 45px;
+  cursor: pointer;
+}

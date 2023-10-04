@@ -1,0 +1,43 @@
+.change-photo-popup {
+  min-width: 500px;
+  min-height: 200px;
+  background-color: #323232;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #41a183;
+  box-sizing: border-box;
+}
+
+.change-photo-popup__title {
+  background-color: #41a183;
+  width: 100%;
+  height: 35px;
+  border-radius: 13px 13px 0 0;
+  color: white;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: normal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.change-photo-popup__input {
+  display: none;
+}
+
+.change-photo-popup__styled-input {
+  margin: auto 0;
+  color: white;
+  background-color: #41a183;
+  width: 140px;
+  height: 30px;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}

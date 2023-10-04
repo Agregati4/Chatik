@@ -1,0 +1,25 @@
+.navigation {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.navigation__link {
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
+  height: 100%;
+  display: flex;
+  padding: 0 5px;
+  align-items: center;
+}
+
+.navigation__link:last-of-type {
+  margin: 0 0 0 10px;
+}
+
+.navigation__link:hover {
+  background-color: #434B4D;
+}
