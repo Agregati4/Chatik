@@ -97,6 +97,10 @@
   background-color: #434B4D;
 }
 
+.profile-field__pseudo-item_no-border {
+  border: none;
+}
+
 .profile-field__info {
   display: flex;
   flex-direction: column;
@@ -198,4 +202,11 @@
   line-height: normal;
   text-align: center;
   margin: 0 0 40px;
+}
+
+.profile-field__loader {
+  align-self: center;
+  color: white;
+  font-size: 14px;
+  font-weight: 400;
 }

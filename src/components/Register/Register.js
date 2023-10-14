@@ -23,6 +23,11 @@ function Register(props) {
     props.handleSignUp({ name: values['name-input'], email: values['email-input'], password: values['password-input'] });
   }
 
+  function handleNavigateToSignin() {
+    navigate('/signin');
+    props.setSignErrorMessage('');
+  }
+
   return (
     <section className="register">
       <div className="register__container">
@@ -40,7 +45,7 @@ function Register(props) {
         />
         <div className="register__underform-text-container">
           <p className="register__text">Уже зарегистрированы?</p>
-          <span onClick={ () => navigate('/signin') } className="register__button">Войти</span>
+          <span onClick={ handleNavigateToSignin } className="register__button">Войти</span>
         </div>
       </div>
     </section>

@@ -14,13 +14,28 @@ function Chat(props) {
   const [ shownChatMessages, setShownChatMessages ] = React.useState([]);
   const [ roomInfo, setRoomInfo ] = React.useState({ title: "", avatar: logo });
   const [ nextMessagesLink, setNextMessagesLink ] = React.useState('');
+  const [ hasMoreMessages, setHasMoreMessages ] = React.useState(true);
   const { roomId } = useParams();
 
   React.useEffect(() => {
     Promise.all([api.getChatMessages(roomId), api.getRoomInfo(roomId)])
     .then(([messageData, roomInfo]) => {
-      setShownChatMessages(messageData.results.reverse());
-      setNextMessagesLink(messageData.next);
+      const messagesToAdd = messageData.results;
+      for(let i = 1; i < messagesToAdd.length; i++) {
+        if (new Date(messagesToAdd[i].created_at.substring(0, 10)) < new Date(messagesToAdd[i-1].created_at.substring(0, 10))) {
+          const date = new Date(messagesToAdd[i-1].created_at);
+          const month = date.toLocaleString('default', { month: 'short' })
+          messagesToAdd[i].newDate = `${ date.getDate() } ${ month }`;
+        }
+      }
+
+      setShownChatMessages(messagesToAdd);
+
+      if (messageData.next) {
+        setNextMessagesLink(messageData.next);
+      } else {
+        setHasMoreMessages(false);
+      }
       setRoomInfo(roomInfo);
     })
     .catch((err) => {
@@ -32,26 +47,10 @@ function Chat(props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ roomId ]);
 
-  React.useEffect(() => {
-    for(let i = 1; i < shownChatMessages.length; i++) {
-      if (new Date(shownChatMessages[i].created_at.substring(0, 10)) > new Date(shownChatMessages[i-1].created_at.substring(0, 10))) {
-        setShownChatMessages(state => {
-          if (state) {
-            const date = new Date(shownChatMessages[i].created_at);
-            const month = date.toLocaleString('default', { month: 'short' })
-            state[i].newDate = `${ date.getDay() } ${ month }`;
-          }
-
-          return state;
-        })
-      }
-    }
-  }, [ shownChatMessages ])
-
   async function handleSubmitChatInput(roomId, chatInputValue) {
     await api.createChatMessage(roomId, chatInputValue)
     .then((newMessage) => {
-      setShownChatMessages(state => [ ...state, { ...newMessage, author: { avatar: currentUser.avatar, username: currentUser.username }, is_owner: true } ]);
+      setShownChatMessages(state => [ { ...newMessage, author: { avatar: currentUser.avatar, username: currentUser.username }, is_owner: true }, ...state ]);
     })
     .catch((err) => {
       console.log(err);
@@ -59,12 +58,29 @@ function Chat(props) {
   }
 
   function getMoreMessages() {
-    api.getMoreMessages(nextMessagesLink)
-    .then((messageData) => {
-      setShownChatMessages(state => [ messageData.results.reverse(), ...state ]);
-      setNextMessagesLink(messageData.next);
-    })
-    .catch()
+    setTimeout(() => {
+      api.getMoreMessages(nextMessagesLink)
+      .then((messageData) => {
+        const messagesToAdd = messageData.results;
+
+        for(let i = 1; i < messagesToAdd.length; i++) {
+          if (new Date(messagesToAdd[i].created_at.substring(0, 10)) < new Date(messagesToAdd[i-1].created_at.substring(0, 10))) {
+            const date = new Date(messagesToAdd[i].created_at);
+            const month = date.toLocaleString('default', { month: 'short' })
+            messagesToAdd[i].newDate = `${ date.getDate() } ${ month }`;
+          }
+        }
+
+        setShownChatMessages(state => state.concat(messagesToAdd));
+  
+        if (messageData.next) {
+          setNextMessagesLink(messageData.next);
+        } else {
+          setHasMoreMessages(false);
+        }
+      })
+      .catch(err => console.log(err))
+    }, 100)
   }
 
   return (
@@ -80,6 +96,7 @@ function Chat(props) {
           roomId={ roomId }
           roomInfo={ roomInfo }
           getMoreMessages={ getMoreMessages }
+          hasMoreMessages={ hasMoreMessages }
         />
       </main>
     </>

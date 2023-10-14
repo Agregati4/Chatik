@@ -225,6 +225,17 @@ class Api {
     })
     .then((res) => this._getResponseData(res));
   }
+
+  getMoreFriends(next) {
+    return fetch(next, {
+      method: 'GET',
+      headers: {
+        ...this.headers,
+        'Authorization': `Bearer ${ localStorage.getItem('access') }`
+      }
+    })
+    .then((res) => this._getResponseData(res));
+  }
 }
 
 const api = new Api({

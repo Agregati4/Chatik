@@ -26,6 +26,8 @@ function ProfileContainer(props) {
             friendList={ props.friendList }
             setIsPageReady={ props.setIsPageReady }
             setConfirmPopup={ props.setConfirmPopup }
+            hasMoreFriends={ props.hasMoreFriends }
+            getMoreFriends={ props.getMoreFriends }
           />
         </> :
         <>

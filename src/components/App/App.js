@@ -17,6 +17,7 @@ import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import auth from '../../utils/Auth';
 import api from '../../utils/Api';
 import Notification from '../Notification/Notification';
+import ProtectedSignRoutes from '../ProtectedSignRoutes/ProtectedSignRoutes';
 
 function App() {
   const navigate = useNavigate();
@@ -54,6 +55,20 @@ function App() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  function refreshToken() {
+    auth.tokenRefresh(localStorage.getItem('refresh'))
+    .then((token) => {
+      setIsLoggedIn(true);
+      localStorage.setItem('access', token.access);
+      localStorage.setItem('refresh', token.refresh);
+      handleCurrentUser();
+    })
+    .catch(() => {
+      setIsLoggedIn(false);
+      localStorage.clear();
+    })
+  }
 
   function handleSignUp(data) {
     auth.signUp(data)
@@ -108,19 +123,6 @@ function App() {
   function handleSignOut() {
     localStorage.clear();
     setIsLoggedIn(false);
-  }
-
-  function refreshToken() {
-    auth.tokenRefresh(localStorage.getItem('refresh'))
-    .then((token) => {
-      setIsLoggedIn(true);
-      localStorage.setItem('access', token.access);
-      handleCurrentUser();
-    })
-    .catch(() => {
-      setIsLoggedIn(false);
-      localStorage.clear();
-    })
   }
 
   function handleCurrentUser() {
@@ -237,21 +239,25 @@ function App() {
             <Route path='/' element={ <ProtectedRoute isLoggedIn={ isLoggedIn } element={
               <Contacts handleNotification={ handleNotification } />
             } /> } />
-            <Route path='/signin' element={
+            <Route path='/signin' element={ <ProtectedSignRoutes isLoggedIn={ isLoggedIn } element={
               <Login
                 signErrorMessage={ signErrorMessage }
+                setSignErrorMessage={ setSignErrorMessage }
                 handleSignIn={ handleSignIn }
                 signButtonTexts={ signButtonTexts }
                 setSignButtonTexts={ setSignButtonTexts }
               />
             } />
-            <Route path='/signup' element={
+            } />
+            <Route path='/signup' element={ <ProtectedSignRoutes isLoggedIn={ isLoggedIn } element={
               <Register
                 signErrorMessage={ signErrorMessage }
+                setSignErrorMessage={ setSignErrorMessage }
                 handleSignUp={ handleSignUp }
                 signButtonTexts={ signButtonTexts }
                 setSignButtonTexts={ setSignButtonTexts }
               />
+            } />
             } />
             <Route path='/profile/:userId' element={ <ProtectedRoute isLoggedIn={ isLoggedIn } element={
               <Profile

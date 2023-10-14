@@ -16,6 +16,8 @@ function Profile(props) {
   const [ isPageReady, setIsPageReady ] = React.useState(false);
   const [ editProfilePopup, setEditProfilePopup ] = React.useState({ isOpen: false });
   const [ confirmPopup, setConfirmPopup ] = React.useState({ isOpen: false });
+  const [ nextFriends, setNextFriends ] = React.useState('');
+  const [ hasMoreFriends, setHasMoreFriends ] = React.useState(true);
   const { userId } = useParams();
 
   React.useEffect(() => {
@@ -23,13 +25,19 @@ function Profile(props) {
     .then(([profileInfo, friendList]) => {
       setProfileInfo(profileInfo);
       setFriendList(friendList.results);
+
+      if (friendList.next) {
+        setNextFriends(friendList.next);
+      } else {
+        setHasMoreFriends(false);
+      }
     })
     .catch(err => console.log(err))
     .finally(() => {
       setIsPageReady(true);
     })
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ userId ]);
+  }, [ userId, localStorage.getItem('access') ]);
 
   function handleUpdateUser(data) {
     api.updateCurrentUser(data)
@@ -68,6 +76,14 @@ function Profile(props) {
     })
   }
 
+  function getMoreFriends() {
+    api.getMoreFriends(nextFriends)
+    .then((friendsData) => {
+      setFriendList(state => state.concat(friendsData.result));
+    })
+    .catch(err => console.log(err))
+  }
+
   return (
     <>
       <Header />
@@ -86,6 +102,8 @@ function Profile(props) {
           friendList={ friendList }
           setIsPageReady={ setIsPageReady }
           setConfirmPopup={ setConfirmPopup }
+          hasMoreFriends={ hasMoreFriends }
+          getMoreFriends={ getMoreFriends }
         />
       </main>
     </>

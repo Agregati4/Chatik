@@ -5,9 +5,11 @@ import '../App/App.css';
 import logo from '../../images/logo.svg';
 import checkmarkGreen from '../../images/checkmarkGreen.svg';
 import deleteButton from '../../images/deleteButton.svg';
+import CurrentUserContext from '../../Contexts/CurrentUserContext';
 
 function Userbar(props) {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const currentUser = React.useContext(CurrentUserContext);
 
   const [ checkboxState, setCheckboxState ] = React.useState(false);
 
@@ -20,7 +22,7 @@ function Userbar(props) {
   }
 
   function handleNavigate(e) {
-    if (e.target.className !== "user-bar__friend-button" && e.target.className !== "user-bar__friend-button ") {
+    if (e.target.className !== "user-bar__friend-button" && e.target.className !== "user-bar__friend-button  ") {
       navigate(`/profile/${ props.userInfo.id }`);
     }
   }
@@ -58,7 +60,13 @@ function Userbar(props) {
         <img onClick={ handleFriendButtonClick } className="user-bar__friend-button" src={ checkmarkGreen } alt="Принять запрос" />
         <img onClick={ handleFriendButtonClick } className="user-bar__friend-button" src={ deleteButton } alt="Отклонить запрос" />
       </div>
-      <img onClick={ handleOpenConfirmPopup } className={ `user-bar__friend-button ${ props.deleteFriendButton ? "" : "display-none" }` } src={ deleteButton } alt="Удалить" />
+      <img
+        onClick={ handleOpenConfirmPopup }
+        // eslint-disable-next-line eqeqeq
+        className={ `user-bar__friend-button ${ props.deleteFriendButton ? "" : "display-none" } ${ props.profileId == currentUser.id ? "" : "display-none" }` }
+        src={ deleteButton }
+        alt="Удалить"
+      />
     </label>
   );
 }

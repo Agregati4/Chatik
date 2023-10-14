@@ -10,6 +10,7 @@ function EditProfilePopup(props) {
   const [ errors, setErrors ] = React.useState({ 'name-input': '', 'status-input': '' });
   const [ isFormValid, setIsFormValid ] = React.useState(false);
   const isInputsNew = values['name-input'] !== currentUser.username || values['status-input'] !== currentUser.status;
+  const isStatusClear = values['status-input'] === "";
 
   React.useEffect(() => {
     values['name-input'] = currentUser.username;
@@ -25,6 +26,9 @@ function EditProfilePopup(props) {
     } else {
       setErrors({ ...errors, [ e.target.name ]: e.target.validationMessage });
     }
+    if(e.target.name === "status-input" && e.target.value.length < 1) {
+      setErrors({ ...errors, [ e.target.name ]: "Поле статуса не может быть пустым" });
+    }
     setIsFormValid(formRef.current.checkValidity());
   }
 
@@ -34,8 +38,13 @@ function EditProfilePopup(props) {
     props.handleUpdateUser({ username: values['name-input'], status: values['status-input'] });
   }
 
+  function handleClose() {
+    props.setEditProfilePopup(state => { return { ...state, isOpen: false } });
+    setErrors({ 'name-input': '', 'status-input': '' });
+  }
+
   return (
-    <Popup handleClose={ () => props.setEditProfilePopup(state => { return { ...state, isOpen: false } }) } isOpen={ props.editProfilePopup.isOpen } children={
+    <Popup handleClose={ handleClose } isOpen={ props.editProfilePopup.isOpen } children={
       <div className="edit-profile-popup">
         <h2 className="edit-profile-popup__title">Редактирование профиля</h2>
         <form className="edit-profile-popup__form" onSubmit={ onSubmit } ref={ formRef } noValidate>
@@ -62,7 +71,7 @@ function EditProfilePopup(props) {
             maxLength="100"
           />
           <span className={ `edit-profile-popup__input-error ${ errors['status-input'] === '' ? "display-none" : ""}` }>{ errors['status-input'] }</span>
-          <button type="submit" className={ `edit-profile-popup__button ${ isFormValid && isInputsNew ? "" : "edit-profile-popup__button_disabled" }` } disabled={ isFormValid && isInputsNew ? false : true }>Сохранить</button>
+          <button type="submit" className={ `edit-profile-popup__button ${ isFormValid && isInputsNew && !isStatusClear ? "" : "edit-profile-popup__button_disabled" }` } disabled={ isFormValid && isInputsNew && !isStatusClear ? false : true }>Сохранить</button>
         </form>
       </div>
     } />

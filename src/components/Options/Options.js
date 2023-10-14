@@ -31,9 +31,7 @@ function Options(props) {
   function handleUpdateRoomTitle(roomId, newTitle) {
     api.updateRoomTitle(roomId, newTitle)
     .then((newRoomInfo) => {
-      props.setRoomInfo(state => {
-        return { ...state, title: newRoomInfo.title }
-      });
+      props.setRoomInfo(newRoomInfo);
       props.handleNotification(true);
     })
     .catch(() => {
@@ -66,9 +64,11 @@ function Options(props) {
     .then((newRoomInfo) => {
       props.handleNotification(true);
       props.setRoomInfo(newRoomInfo);
-
+      setCreateRoomPopup(state => {
+        return { ...state, isOpen: false }
+      })
     })
-    .catch(err => {
+    .catch(() => {
       props.handleNotification(false);
     })
   }

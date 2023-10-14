@@ -1,9 +1,9 @@
 import * as React from 'react';
-import './ContactBar.css';
+import './RoomBar.css';
 import '../App/App.css';
 import logo from '../../images/logo.svg';
 
-function ContactBar(props) {
+function RoomBar(props) {
   const date = props.roomInfo.last_message ? new Date(props.roomInfo.last_message.created_at) : null;
 
   function handleBarClick() {
@@ -12,7 +12,7 @@ function ContactBar(props) {
 
   return (
     <div onClick={ handleBarClick } className="contact-bar">
-      <img src={ props.avatar || logo } className="contact-bar__image" alt="Аватарка беседы" />
+      <img src={ props.roomInfo.avatar || logo } className="contact-bar__image" alt="Аватарка беседы" />
       <div className={ `contact-bar__info ${ props.roomInfo.last_message ? "" : "contact-bar__info_center" }` }>
         <h2 className="contact-bar__title">{ props.roomInfo.title }</h2>
         <p className={ `contact-bar__last-message ${ props.roomInfo.last_message ? "" : "display-none" }` }>
@@ -25,4 +25,4 @@ function ContactBar(props) {
   );
 }
 
-export default ContactBar;
+export default RoomBar;

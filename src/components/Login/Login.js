@@ -23,6 +23,11 @@ function Login(props) {
     props.handleSignIn({ email: values['email-input'], password: values['password-input'] });
   }
 
+  function handleNavigateToSignup() {
+    navigate('/signup');
+    props.setSignErrorMessage('');
+  }
+
   return (
     <section className="register">
       <div className="register__container">
@@ -41,7 +46,7 @@ function Login(props) {
         />
         <div className="register__underform-text-container">
           <p className="register__text">Ещё не зарегистрированы?</p>
-          <span onClick={ () => navigate('/signup') } className="register__button">Регистрация</span>
+          <span onClick={ handleNavigateToSignup } className="register__button">Регистрация</span>
         </div>
       </div>
     </section>
