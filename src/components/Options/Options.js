@@ -4,20 +4,29 @@ import './Options.css';
 import Header from '../Header/Header';
 import OptionsContainer from '../OptionsContainer/OptionsContainer';
 import api from '../../utils/Api';
-import CurrentUserContext from '../../Contexts/CurrentUserContext';
-import CreateRoomPopup from '../CreateRoomPopup/CreateRoomPopup';
+import CreateRoomPopup from '../AddMembersPopup/AddMembersPopup';
+import { useSelector } from 'react-redux';
+import PicturePopup from '../PicturePopup/PicturePopup';
+import { useActions } from '../../store/Hooks/useActions';
+import SelectPhotoPopup from '../SelectPhotoPopup/SelectPhotoPopup';
+import ConfirmPhotoPopup from '../ConfirmPhotoPopup/ConfirmPhotoPopup';
+import Notification from '../Notification/Notification';
+import HandleNotification from '../../customFunctions/HandleNotification';
 
 function Options(props) {
-  const currentUser = React.useContext(CurrentUserContext);
-  const [ createRoomPopup, setCreateRoomPopup ] = React.useState({ isOpen: false, userList: [] });
+  const { currentUser } = useSelector(state => state.currentUser);
   const [ isPageReady, setIsPageReady ] = React.useState(false);
   const [ membersToAdd, setMembersToAdd ] = React.useState([]);
   const { roomId } = useParams();
+  const selectPhotoPopup = useSelector(state => state.popups.find(popup => popup.key === 'selectPhotoPopup'));
+  const { popupOpened, popupClosed } = useActions();
+  const { handleNotification } = HandleNotification();
+  const { roomInfoSetted } = useActions();
 
   React.useEffect(() => {
     api.getRoomInfo(roomId)
     .then((roomInfo) => {
-      props.setRoomInfo(roomInfo);
+      roomInfoSetted(roomInfo);
     })
     .catch((err) => {
       console.log(err);
@@ -31,22 +40,20 @@ function Options(props) {
   function handleUpdateRoomTitle(roomId, newTitle) {
     api.updateRoomTitle(roomId, newTitle)
     .then((newRoomInfo) => {
-      props.setRoomInfo(newRoomInfo);
-      props.handleNotification(true);
+      roomInfoSetted(newRoomInfo);
+      handleNotification(true);
     })
     .catch(() => {
-      props.handleNotification(false);
+      handleNotification(false);
     })
   }
 
   function handleOpenCreateRoomPopup() {
     api.getUserFriends(currentUser.id)
     .then((friendList) => {
-      setCreateRoomPopup(state => {
-        const userList = friendList.results.filter(user => !props.roomInfo.member_set.some(member => member.id === user.id));
+      const userList = friendList.results.filter(user => !props.roomInfo.member_set.some(member => member.id === user.id));
 
-        return { ...state, isOpen: true, userList: userList, title: "Добавить участников", buttonText: "Добавить" };
-      });
+      popupOpened({ isOpen: true, userList: userList, title: "Добавить участников", buttonText: "Добавить", key: 'addMembersPopup' });
     })
     .catch(err => console.log(err))
   }
@@ -62,14 +69,25 @@ function Options(props) {
   function handleAddMembers() {
     api.addMembersToRoom(membersToAdd, roomId)
     .then((newRoomInfo) => {
-      props.handleNotification(true);
-      props.setRoomInfo(newRoomInfo);
-      setCreateRoomPopup(state => {
-        return { ...state, isOpen: false }
-      })
+      handleNotification(true);
+      roomInfoSetted(newRoomInfo);
+      popupClosed('addMembersPopup');
     })
     .catch(() => {
-      props.handleNotification(false);
+      handleNotification(false);
+    })
+  }
+
+  function handleConfirmPhotoChange(file) {
+    api.updateRoomPhoto(selectPhotoPopup.roomId, file)
+    .then((newRoomInfo) => {
+      popupClosed('confirmPhotoPopup');
+      roomInfoSetted(newRoomInfo);
+      handleNotification(true);
+    })
+    .catch(() => {
+      popupClosed('confirmPhotoPopup');
+      handleNotification(false);
     })
   }
 
@@ -77,19 +95,17 @@ function Options(props) {
     <>
       <Header />
       <CreateRoomPopup
-        createRoomPopup={ createRoomPopup }
-        setCreateRoomPopup={ setCreateRoomPopup }
         handleMemberSet={ handleMemberSet }
         membersToAdd={ membersToAdd }
         onButtonClick={ handleAddMembers }
       />
+      <PicturePopup />
+      <SelectPhotoPopup />
+      <ConfirmPhotoPopup handleConfirmPhotoChange={ handleConfirmPhotoChange } />
+      <Notification />
       <main className="content">
         <OptionsContainer
-          setPicturePopup={ props.setPicturePopup }
-          setChangePhotoPopup={ props.setChangePhotoPopup }
-          handleChatPhotoChange={ props.handleChatPhotoChange }
           handleOpenCreateRoomPopup={ handleOpenCreateRoomPopup }
-          roomInfo={ props.roomInfo }
           handleUpdateRoomTitle={ handleUpdateRoomTitle }
           roomId={ roomId }
           isPageReady={ isPageReady }

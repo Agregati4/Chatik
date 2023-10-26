@@ -1,31 +1,57 @@
-import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
 import logo from '../../images/logo.svg';
 import AuthForm from '../AuthForm/AuthForm';
 import '../Header/Header.css';
-import FormValidation from '../FormValidation/FormValidation';
+import FormValidation from '../../customFunctions/FormValidation';
+import { useSignUpMutation } from '../../store/Api/api.SignUpAndIn/api.SignUpAndIn';
+import { useActions } from '../../store/Hooks/useActions';
+import { createRef } from 'react';
+import HandleSignIn from '../../customFunctions/HandleSignIn';
 
 function Register(props) {
   const navigate = useNavigate();
-  const formRef = React.createRef();
+  const formRef = createRef();
   const { handleInputChange, isFormValid, values, errors } = FormValidation(
     formRef, { "name-input": "", "email-input": "", "password-input": "" }, { "name-input": "", "email-input": "", "password-input": "" }
   );
+  const [ signUp ] = useSignUpMutation();
+  const { signErrorMessageSetted, registerButtonTextSetted } = useActions();
+  const { handleSignIn } = HandleSignIn();
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    props.setSignButtonTexts(state => {
-      return { ...state, regText: 'Регистрация...' }
-    })
+    registerButtonTextSetted('Регистрация...');
 
-    props.handleSignUp({ name: values['name-input'], email: values['email-input'], password: values['password-input'] });
+    handleSignUp({ name: values['name-input'], email: values['email-input'], password: values['password-input'] });
+  }
+
+  function handleSignUp(data) {
+    signUp(data)
+    .unwrap()
+    .then(() => {
+      handleSignIn(data);
+    })
+    .catch((err) => {
+      if (err.status === 400) {
+        return signErrorMessageSetted('Пользователь с таким email уже существует');
+      }
+
+      if (err.status === 500) {
+        return signErrorMessageSetted('На сервере произошла ошибка');
+      } else {
+        return signErrorMessageSetted('Произошла ошибка');
+      }
+    })
+    .finally(() => {
+      registerButtonTextSetted('Зарегистрироваться');
+    })
   }
 
   function handleNavigateToSignin() {
     navigate('/signin');
-    props.setSignErrorMessage('');
+    signErrorMessageSetted('');
   }
 
   return (
@@ -39,9 +65,7 @@ function Register(props) {
           values={ values }
           errors={ errors }
           formRef={ formRef }
-          signErrorMessage={ props.signErrorMessage }
           onSubmit={ handleSubmit }
-          signButtonTexts={ props.signButtonTexts }
         />
         <div className="register__underform-text-container">
           <p className="register__text">Уже зарегистрированы?</p>

@@ -20,8 +20,6 @@ function FriendsContainer(props) {
             shownUsers={ props.shownUsers }
             friendsText={ props.friendsText }
             setFriendsText={ props.setFriendsText }
-            friendRequests={ props.friendRequests }
-            handleFriend={ props.handleFriend }
           />
         </> :
         <>

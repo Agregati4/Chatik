@@ -1,11 +1,15 @@
-import * as React from 'react';
-import './CreateRoomPopup.css';
+import './AddMembersPopup.css';
 import Popup from '../Popup/Popup';
 import Userbar from '../Userbar/Userbar';
 import loupeIcon from '../../images/loupe-icon.svg';
+import { useState } from 'react';
+import { useActions } from '../../store/Hooks/useActions';
+import { useSelector } from 'react-redux';
 
-function CreateRoomPopup(props) {
-  const [ searchInputValue, setSearchInputValue ] = React.useState('');
+function AddMembersPopup(props) {
+  const [ searchInputValue, setSearchInputValue ] = useState('');
+  const { popupClosed } = useActions();
+  const addMembersPopup = useSelector(state => state.popups.find(popup => popup.key === 'addMembersPopup'));
 
   function handleSearchInputValue(e) {
     setSearchInputValue(e.target.value);
@@ -16,28 +20,28 @@ function CreateRoomPopup(props) {
   }
 
   function handleClose() {
-    props.setCreateRoomPopup(state => { return { ...state, isOpen: false } });
+    popupClosed('addMembersPopup');
     setSearchInputValue('');
   }
 
   return (
-    <Popup handleClose={ handleClose } isOpen={ props.createRoomPopup.isOpen } children={
+    <Popup handleClose={ handleClose } isOpen={ addMembersPopup.isOpen } children={
       <div className="create-discuss-popup">
-        <h2 className="create-discuss-popup__title">{ props.createRoomPopup.title }</h2>
+        <h2 className="create-discuss-popup__title">{ addMembersPopup.title }</h2>
         <div className="create-discuss-popup__box">
           <h3 className="create-discuss-popup__subtitle">Выберите контакты:</h3>
           {
-            props.createRoomPopup.userList.map((user, index) => <Userbar
+            addMembersPopup.userList.map((user, index) => <Userbar
               key={ index }
               userInfo={ user }
-              isOpen={ props.createRoomPopup.isOpen }
+              isOpen={ addMembersPopup.isOpen }
               isCheckBar={ true }
               handleMemberSet={ props.handleMemberSet }
             />)
           }
         </div>
         <div className="create-discuss-popup__submit-box">
-          <form className={ `create-discuss-popup__form ${ props.createRoomPopup.isTitleNeed ? "" : "display-none" }` }>
+          <form className={ `create-discuss-popup__form ${ addMembersPopup.isTitleNeed ? "" : "display-none" }` }>
             <img className="create-discuss-popup__loupe-icon" src={ loupeIcon } alt="Иконка поиска" />
             <input
               type="text"
@@ -53,14 +57,14 @@ function CreateRoomPopup(props) {
             onClick={ handleButtonClick }
             className={
               `create-discuss-popup__button
-              ${ props.createRoomPopup.isTitleNeed ? "" : "create-discuss-popup__button_no-input" }
+              ${ addMembersPopup.isTitleNeed ? "" : "create-discuss-popup__button_no-input" }
               ${ props.membersToAdd.length > 0 ? "" : "create-discuss-popup__button_disabled" }` }
             disabled={ props.membersToAdd.length > 0 ? false : true }
-          >{ props.createRoomPopup.buttonText }</button>
+          >{ addMembersPopup.buttonText }</button>
         </div>
       </div>
     } />
   )
 }
 
-export default CreateRoomPopup;
+export default AddMembersPopup;

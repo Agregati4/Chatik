@@ -1,19 +1,20 @@
-import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Userbar.css';
 import '../App/App.css';
 import logo from '../../images/logo.svg';
 import checkmarkGreen from '../../images/checkmarkGreen.svg';
 import deleteButton from '../../images/deleteButton.svg';
-import CurrentUserContext from '../../Contexts/CurrentUserContext';
+import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useActions } from '../../store/Hooks/useActions';
 
 function Userbar(props) {
   const navigate = useNavigate()
-  const currentUser = React.useContext(CurrentUserContext);
+  const { currentUser } = useSelector(state => state.currentUser);
+  const [ checkboxState, setCheckboxState ] = useState(false);
+  const { popupOpened } = useActions();
 
-  const [ checkboxState, setCheckboxState ] = React.useState(false);
-
-  React.useEffect(() => {
+  useEffect(() => {
     setCheckboxState(false);
   }, [ props.isOpen ])
 
@@ -23,6 +24,7 @@ function Userbar(props) {
 
   function handleNavigate(e) {
     if (e.target.className !== "user-bar__friend-button" && e.target.className !== "user-bar__friend-button  ") {
+      props.setIsPageReady(false);
       navigate(`/profile/${ props.userInfo.id }`);
     }
   }
@@ -42,9 +44,7 @@ function Userbar(props) {
   }
 
   function handleOpenConfirmPopup() {
-    props.setConfirmPopup(state => {
-      return { ...state, isOpen: true, friendId: props.userInfo.id }
-    })
+    popupOpened({ isOpen: true, friendId: props.userInfo.id, key: 'confirmPopup'});
   }
 
   return (

@@ -5,17 +5,17 @@ import '../App/App.css';
 import Header from '../Header/Header';
 import ChatContainer from '../ChatContainer/ChatContainer';
 import api from '../../utils/Api';
-import logo from '../../images/logo.svg';
-import CurrentUserContext from '../../Contexts/CurrentUserContext';
+import { useSelector } from 'react-redux';
+import { useActions } from '../../store/Hooks/useActions';
 
-function Chat(props) {
-  const currentUser = React.useContext(CurrentUserContext);
+function Chat() {
+  const { currentUser } = useSelector(state => state.currentUser);
   const [ isPageReady, setIsPageReady ] = React.useState(false);
   const [ shownChatMessages, setShownChatMessages ] = React.useState([]);
-  const [ roomInfo, setRoomInfo ] = React.useState({ title: "", avatar: logo });
   const [ nextMessagesLink, setNextMessagesLink ] = React.useState('');
   const [ hasMoreMessages, setHasMoreMessages ] = React.useState(true);
   const { roomId } = useParams();
+  const { roomInfoSetted } = useActions();
 
   React.useEffect(() => {
     Promise.all([api.getChatMessages(roomId), api.getRoomInfo(roomId)])
@@ -36,7 +36,7 @@ function Chat(props) {
       } else {
         setHasMoreMessages(false);
       }
-      setRoomInfo(roomInfo);
+      roomInfoSetted(roomInfo);
     })
     .catch((err) => {
       console.log(err);
@@ -90,11 +90,9 @@ function Chat(props) {
         <ChatContainer
           shownChatMessages={ shownChatMessages }
           setShownChatMessages={ setShownChatMessages }
-          handleChatMessagesOnUpdate={ props.handleChatMessagesOnUpdate }
           handleSubmitChatInput={ handleSubmitChatInput }
           isPageReady={ isPageReady }
           roomId={ roomId }
-          roomInfo={ roomInfo }
           getMoreMessages={ getMoreMessages }
           hasMoreMessages={ hasMoreMessages }
         />

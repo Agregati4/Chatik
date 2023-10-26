@@ -1,24 +1,27 @@
-import * as React from 'react';
 import './Contacts.css';
 import '../App/App.css';
 import { useNavigate } from 'react-router-dom';
 import Header from '../Header/Header';
 import ContactsContainer from '../ContactsContainer/ContactsContainer';
 import api from '../../utils/Api';
-import CurrentUserContext from '../../Contexts/CurrentUserContext';
-import CreateRoomPopup from '../CreateRoomPopup/CreateRoomPopup';
+import { useSelector } from 'react-redux';
+import AddMembersPopup from '../AddMembersPopup/AddMembersPopup';
+import { useEffect, useState } from 'react';
+import { useActions } from '../../store/Hooks/useActions';
+import Notification from '../Notification/Notification';
+import HandleNotification from '../../customFunctions/HandleNotification';
 
-function Contacts(props) {
-  const currentUser = React.useContext(CurrentUserContext);
+function Contacts() {
+  const { currentUser } = useSelector(state => state.currentUser);
   const navigate = useNavigate();
+  const [ isPageReady, setIsPageReady ] = useState(false);
+  const [ shownRooms, setShownRooms ] = useState([]);
+  const [ roomsArray, setRoomsArray ] = useState([]);
+  const [ membersToAdd, setMembersToAdd ] = useState([]);
+  const { popupOpened } = useActions();
+  const { handleNotification } = HandleNotification();
 
-  const [ isPageReady, setIsPageReady ] = React.useState(false);
-  const [ createRoomPopup, setCreateRoomPopup ] = React.useState({ isOpen: false, userList: [] });
-  const [ shownRooms, setShownRooms ] = React.useState([]);
-  const [ roomsArray, setRoomsArray ] = React.useState([]);
-  const [ membersToAdd, setMembersToAdd ] = React.useState([]);
-
-  React.useEffect(() => {
+  useEffect(() => {
     api.getRooms()
     .then((rooms) => {
       setShownRooms(rooms.results);
@@ -47,9 +50,7 @@ function Contacts(props) {
   function handleOpenCreateRoomPopup() {
     api.getUserFriends(currentUser.id)
     .then((friendList) => {
-      setCreateRoomPopup(state => {
-        return { ...state, isOpen: true, userList: friendList.results, title: "Создать беседу", buttonText: "Создать", isTitleNeed: true };
-      });
+      popupOpened({ isOpen: true, userList: friendList.results, title: "Создать беседу", buttonText: "Создать", isTitleNeed: true, key: 'addMembersPopup' });
       setMembersToAdd([]);
     })
     .catch(err => console.log(err))
@@ -71,24 +72,23 @@ function Contacts(props) {
     api.createRoom(membersToAdd, roomTitle)
     .then((newRoomInfo) => {
       navigate(`/chat/${ newRoomInfo.id }`);
-      props.handleNotification(true);
+      handleNotification(true);
     })
-    .catch(err => {
-      props.handleNotification(false);
+    .catch(() => {
+      handleNotification(false);
     })
   }
 
   return (
     <>
       <Header />
-      <CreateRoomPopup
-        createRoomPopup={ createRoomPopup }
-        setCreateRoomPopup={ setCreateRoomPopup }
+      <AddMembersPopup
         handleCreateRoom={ handleCreateRoom }
         handleMemberSet={ handleMemberSet }
         onButtonClick={ handleCreateRoom }
         membersToAdd={ membersToAdd }
       />
+      <Notification />
       <main className="content">
         <ContactsContainer
           handleOpenCreateRoomPopup={ handleOpenCreateRoomPopup }

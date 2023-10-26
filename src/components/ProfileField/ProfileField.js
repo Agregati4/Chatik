@@ -1,23 +1,28 @@
 /* eslint-disable eqeqeq */
-import * as React from 'react';
 import './ProfileField.css';
 import Userbar from '../Userbar/Userbar';
 import logo from '../../images/logo.svg';
 import addButton from '../../images/add-buddys-button.svg';
-import CurrentUserContext from '../../Contexts/CurrentUserContext';
 import Checkmark from '../../images/checkmark.svg';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useSelector } from 'react-redux';
+import { useActions } from '../../store/Hooks/useActions';
 
 function ProfileField(props) {
-  const currentUser = React.useContext(CurrentUserContext);
-  const isUserFriend = props.friendList.some(friend => friend.id === currentUser.id)
+  const { currentUser } = useSelector(state => state.currentUser);
+  const isUserFriend = props.friendList.some(friend => friend.id === currentUser.id);
+  const { popupOpened } = useActions();
 
   function handleAvatarClick() {
-    props.setPicturePopup({ isOpen: true, src: props.profileInfo.avatar || logo })
+    popupOpened({ isOpen: true, src: props.profileInfo.avatar || logo, key: 'picturePopup' });
   }
 
   function handleEditButtonClick() {
-    props.setEditProfilePopup({ isOpen: true });
+    popupOpened({ isOpen: true, key:'editProfilePopup' });
+  }
+
+  function handleProfilePhotoChange() {
+    popupOpened({ isOpen: true, key: 'selectPhotoPopup' });
   }
 
   return (
@@ -29,7 +34,7 @@ function ProfileField(props) {
           {
             props.profileInfo.id !== currentUser.id ?
             <></> :
-            <li onClick={ () => props.handleProfilePhotoChange() } className="profile-field__pseudo-item">Обновить фото</li>
+            <li onClick={ handleProfilePhotoChange } className="profile-field__pseudo-item">Обновить фото</li>
           }
         </ul>
       </div>
@@ -48,10 +53,11 @@ function ProfileField(props) {
           dataLength={ props.friendList.length }
           next={ props.getMoreFriends }
           hasMore={ props.hasMoreFriends }
-          loader={ <p className="profile-field__loader">Загрузка...</p> }
+          loader={ <p className={ `profile-field__loader ${ props.friendList > 0 ? "" : "display-none"}` }>Загрузка...</p> }
         >
         {
-          props.friendList.map((friend) => <Userbar
+          props.friendList.map((friend, index) => <Userbar
+            key={ index }
             userInfo={ friend }
             setIsPageReady={ props.setIsPageReady }
             deleteFriendButton={ true }

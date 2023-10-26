@@ -14,12 +14,37 @@
   display: flex;
   padding: 0 5px;
   align-items: center;
+  margin: 0 0 0 10px;
+  position: relative;
 }
 
-.navigation__link:last-of-type {
-  margin: 0 0 0 10px;
+.navigation__link:first-of-type {
+  margin: 0;
 }
 
 .navigation__link:hover {
   background-color: #434B4D;
+}
+
+.navigation__bell-image {
+  width: 30px;
+  height: 30px;
+  background-image: url('../../images/bell-image.svg');
+  background-size: 30px 30px;
+}
+
+.navigation__requests-length {
+  position: absolute;
+  font-size: 16px;
+  color: white;
+  font-weight: 400;
+  bottom: 10px;
+  left: 2px;
+  background-color: #41a183;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

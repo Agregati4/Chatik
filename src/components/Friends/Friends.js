@@ -1,21 +1,19 @@
-import * as React from 'react';
 import './Friends.css';
 import Header from '../Header/Header';
 import FriendsContainer from '../FriendsContainer/FriendsContainer';
 import api from '../../utils/Api';
+import { useEffect, useState } from 'react';
 
 function Friends(props) {
-  const [ shownUsers, setShownUsers ] = React.useState([]);
-  const [ usersArray, setUsersArray ] = React.useState([]);
-  const [ friendsText, setFriendsText ] = React.useState('Чтобы начать поиск друзей введите запрос и нажмите "Enter"');
-  const [ friendRequests, setFriendRequests ] = React.useState([]);
-  const [ isPageReady, setIsPageReady ] = React.useState(false);
+  const [ shownUsers, setShownUsers ] = useState([]);
+  const [ usersArray, setUsersArray ] = useState([]);
+  const [ friendsText, setFriendsText ] = useState('Чтобы начать поиск друзей введите запрос и нажмите "Enter"');
+  const [ isPageReady, setIsPageReady ] = useState(false);
 
-  React.useEffect(() => {
-    Promise.all([api.getAllUsers(), api.getFriendRequests()])
-    .then(([usersData, friendRequests]) => {
+  useEffect(() => {
+    api.getAllUsers()
+    .then( usersData => {
       setUsersArray(usersData.results);
-      setFriendRequests(friendRequests.results);
     })
     .catch((err) => console.log(err))
     .finally(() => {
@@ -29,14 +27,6 @@ function Friends(props) {
     setShownUsers(filteredUsers);
   }
 
-  function handleFriend(friendToAdd, friendToRemove, userId) {
-    api.handleFriend(friendToAdd, friendToRemove)
-    .then(() => {
-      setFriendRequests(state => state.filter(friend => friend.id !== userId));
-    })
-    .catch(err => console.log(err))
-  }
-
   return (
     <>
       <Header />
@@ -46,9 +36,7 @@ function Friends(props) {
           shownUsers={ shownUsers }
           friendsText={ friendsText }
           setFriendsText={ setFriendsText }
-          friendRequests={ friendRequests }
           isPageReady={ isPageReady }
-          handleFriend={ handleFriend }
         />
       </main>
     </>

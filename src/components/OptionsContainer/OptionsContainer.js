@@ -18,11 +18,6 @@ function OptionsContainer(props) {
             isOptionButtonRed={ true }
           />
           <OptionsField
-            setPicturePopup={ props.setPicturePopup }
-            setChangePhotoPopup={ props.setChangePhotoPopup }
-            handleChatPhotoChange={ props.handleChatPhotoChange }
-            handleOpenCreateRoomPopup={ props.handleOpenCreateRoomPopup }
-            roomInfo={ props.roomInfo }
             handleUpdateRoomTitle={ props.handleUpdateRoomTitle }
             roomId={ props.roomId }
           />

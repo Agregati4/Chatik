@@ -6,9 +6,11 @@ import ChatInputContainer from '../ChatInputContainer/ChatInputContainer';
 import Preloader from '../Preloader/Preloader';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import ChatMessage from '../ChatMessage/ChatMessage';
+import { useSelector } from 'react-redux';
 
 function ChatContainer(props) {
   const navigate = useNavigate();
+  const { roomInfo } = useSelector(state => state.roomInfo);
 
   return (
     <section className="chat-container" id="scrollableDiv">
@@ -16,7 +18,7 @@ function ChatContainer(props) {
         optionsButton={ true }
         optionsButtonText="Настройки беседы"
         onClickOptionsButton={ () => navigate(`/options/${ props.roomId }`) }
-        title={ props.roomInfo.title }
+        title={ roomInfo.title }
       />
       {
         props.isPageReady ?
@@ -41,8 +43,6 @@ function ChatContainer(props) {
       }
       <ChatInputContainer
         handleSubmitChatInput={ props.handleSubmitChatInput }
-        chatInputValue={ props.chatInputValue }
-        setChatInputValue={ props.setChatInputValue }
         roomId={ props.roomId }
       />
     </section>

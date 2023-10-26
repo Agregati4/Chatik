@@ -12,14 +12,13 @@ class Api {
     return Promise.reject(res);
   }
 
-  updateCurrentUser(data) {
+  updateCurrentUser(data, info) {
     return fetch(`${ this._url }/auth/users/me/`, {
       method: 'PATCH',
       headers: {
-        ...this._headers,
         'Authorization': `Bearer ${ localStorage.getItem('access') }`
       },
-      body: JSON.stringify({
+      body: info.updateAvatar ? data : JSON.stringify({
         username: data.username,
         status: data.status
       })

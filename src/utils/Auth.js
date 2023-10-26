@@ -48,23 +48,23 @@ class Auth {
     .then((res) => this._getResponseData(res));
   }
 
-  validation(token) {
+  validation() {
     return fetch(`${ this._url }/auth/jwt/verify`, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify({
-        token: token
+        token: localStorage.getItem('access')
       })
     })
     .then((res) => this._getResponseData(res));
   }
 
-  tokenRefresh(refresh) {
+  tokenRefresh() {
     return fetch(`${ this._url }/auth/jwt/refresh`, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify({
-        refresh: refresh
+        refresh: localStorage.getItem('refresh')
       })
     })
     .then((res) => this._getResponseData(res));

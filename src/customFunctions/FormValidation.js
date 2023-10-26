@@ -1,9 +1,9 @@
-import * as React from 'react';
+import { useState } from "react";
 
 export default function FormValidation(formRef, inputValues, errorValues) {
-  const [ values, setValues ] = React.useState(inputValues);
-  const [ errors, setErrors ] = React.useState(errorValues);
-  const [ isFormValid, setIsFormValid ] = React.useState(false);
+  const [ values, setValues ] = useState(inputValues);
+  const [ errors, setErrors ] = useState(errorValues);
+  const [ isFormValid, setIsFormValid ] = useState(false);
 
   const handleInputChange = (e) => {
     setValues({ ...values, [ e.target.name ]: e.target.value });

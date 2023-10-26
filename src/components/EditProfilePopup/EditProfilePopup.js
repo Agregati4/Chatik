@@ -1,23 +1,28 @@
-import * as React from 'react';
 import './EditProfilePopup.css';
 import Popup from '../Popup/Popup';
-import CurrentUserContext from '../../Contexts/CurrentUserContext';
+import { useSelector } from 'react-redux';
+import { createRef, useEffect, useState } from 'react';
+import { useActions } from '../../store/Hooks/useActions';
 
 function EditProfilePopup(props) {
-  const currentUser = React.useContext(CurrentUserContext);
-  const formRef = React.createRef();
-  const [ values, setValues ] = React.useState({ 'name-input': '', 'status-input': '' });
-  const [ errors, setErrors ] = React.useState({ 'name-input': '', 'status-input': '' });
-  const [ isFormValid, setIsFormValid ] = React.useState(false);
+  const { currentUser } = useSelector(state => state.currentUser);
+  // formValidation
+  const formRef = createRef();
+  const [ values, setValues ] = useState({ 'name-input': '', 'status-input': '' });
+  const [ errors, setErrors ] = useState({ 'name-input': '', 'status-input': '' });
+  const [ isFormValid, setIsFormValid ] = useState(false);
   const isInputsNew = values['name-input'] !== currentUser.username || values['status-input'] !== currentUser.status;
   const isStatusClear = values['status-input'] === "";
+  // popups - an array with objects. In it you can find popup properties by key - popup name
+  const editProfilePopup = useSelector(state => state.popups.find(popup => popup.key === 'editProfilePopup'));
+  const { popupClosed } = useActions();
 
-  React.useEffect(() => {
+  useEffect(() => {
     values['name-input'] = currentUser.username;
     values['status-input'] = currentUser.status;
     setIsFormValid(formRef.current.checkValidity());
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ props.editProfilePopup.isOpen ]);
+  }, [ editProfilePopup.isOpen ]);
 
   function handleInputValues(e) {
     setValues({ ...values, [ e.target.name ]: e.target.value });
@@ -39,12 +44,12 @@ function EditProfilePopup(props) {
   }
 
   function handleClose() {
-    props.setEditProfilePopup(state => { return { ...state, isOpen: false } });
+    popupClosed('editProfilePopup');
     setErrors({ 'name-input': '', 'status-input': '' });
   }
 
   return (
-    <Popup handleClose={ handleClose } isOpen={ props.editProfilePopup.isOpen } children={
+    <Popup handleClose={ handleClose } isOpen={ editProfilePopup.isOpen } children={
       <div className="edit-profile-popup">
         <h2 className="edit-profile-popup__title">Редактирование профиля</h2>
         <form className="edit-profile-popup__form" onSubmit={ onSubmit } ref={ formRef } noValidate>

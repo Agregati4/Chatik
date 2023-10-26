@@ -1,14 +1,23 @@
 import * as React from 'react';
 import './ConfirmPopup.css';
 import Popup from '../Popup/Popup';
+import { useSelector } from 'react-redux';
+import { useActions } from '../../store/Hooks/useActions';
 
 function ConfirmPopup(props) {
+  const confirmPopup = useSelector(state => state.popups.find(popup => popup.key === 'confirmPopup'));
+  const { popupClosed } = useActions();
+
   function handleConfirm() {
-    props.handleDeleteFriend(props.confirmPopup.friendId);
+    props.handleDeleteFriend(confirmPopup.friendId);
+  }
+
+  function handleClose() {
+    popupClosed('confirmPopup');
   }
 
   return (
-    <Popup handleClose={ props.handleClose } isOpen={ props.confirmPopup.isOpen } children={
+    <Popup handleClose={ handleClose } isOpen={ confirmPopup.isOpen } children={
       <div className="confirm-popup">
         <h2 className="confirm-popup__title">Вы уверены?</h2>
         <div className="confirm-popup__buttons">

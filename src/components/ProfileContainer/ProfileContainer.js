@@ -1,4 +1,3 @@
-import * as React from 'react';
 import './ProfileContainer.css';
 import ChatMenu from '../ChatMenu/ChatMenu';
 import ProfileField from '../ProfileField/ProfileField';
@@ -20,7 +19,6 @@ function ProfileContainer(props) {
           <ProfileField
             setPicturePopup={ props.setPicturePopup }
             handleProfilePhotoChange={ props.handleProfilePhotoChange }
-            setEditProfilePopup={ props.setEditProfilePopup }
             profileInfo={ props.profileInfo }
             userId={ props.userId }
             friendList={ props.friendList }

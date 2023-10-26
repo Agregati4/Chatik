@@ -1,18 +1,22 @@
 /* eslint-disable eqeqeq */
-import * as React from 'react';
 import './OptionsField.css';
 import pencil from '../../images/pencil.svg';
 import checkMark from '../../images/checkmark.svg';
 import Userbar from '../Userbar/Userbar';
 import logo from '../../images/logo.svg';
+import { useActions } from '../../store/Hooks/useActions';
+import { useSelector } from 'react-redux';
+import { createRef, useEffect, useState } from 'react';
 
 function OptionsField(props) {
-  const input = React.createRef();
-  const [ roomTitleValue, setRoomTitleValue ] = React.useState('');
+  const input = createRef();
+  const [ roomTitleValue, setRoomTitleValue ] = useState('');
+  const { popupOpened } = useActions();
+  const { roomInfo } = useSelector(state => state.roomInfo);
 
-  React.useEffect(() => {
-    setRoomTitleValue(props.roomInfo.title);
-  }, [ props.roomInfo ])
+  useEffect(() => {
+    setRoomTitleValue(roomInfo.title);
+  }, [ roomInfo ])
 
   function handleInputValue(e) {
     setRoomTitleValue(e.target.value);
@@ -23,9 +27,10 @@ function OptionsField(props) {
   }
 
   function handleOpenPicture() {
-    props.setPicturePopup({
+    popupOpened({
       isOpen: true,
-      src: props.roomInfo.avatar
+      src: roomInfo.avatar,
+      key: 'picturePopup'
     })
   }
 
@@ -35,32 +40,36 @@ function OptionsField(props) {
     props.handleUpdateRoomTitle(props.roomId, roomTitleValue);
   }
 
+  function handleChatPhotoChange() {
+    popupOpened({ isOpen: true, key: 'selectPhotoPopup', roomId: props.roomId });
+  }
+
   return (
     <section className="options-field">
       <div className="options-field__info">
         <div className="options-field__photo-box">
-          <img className="options-field__photo" src={ props.roomInfo.avatar || logo } alt="Аватар беседы" />
+          <img className="options-field__photo" src={ roomInfo.avatar || logo } alt="Аватар беседы" />
           <ul className="options-field__pseudo-element">
             <li onClick={ handleOpenPicture } className="options-field__pseudo-item">Открыть фото</li>
-            <li onClick={ () => props.handleChatPhotoChange(props.roomId) } className="options-field__pseudo-item">Обновить фото</li>
+            <li onClick={ () => handleChatPhotoChange(props.roomId) } className="options-field__pseudo-item">Обновить фото</li>
           </ul>
         </div>
-        <form className={ `options-field__input-form ${ roomTitleValue !== props.roomInfo.title ? "options-field__input-form_active" : "" }` } onSubmit={ handleSubmit }>
+        <form className={ `options-field__input-form ${ roomTitleValue !== roomInfo.title ? "options-field__input-form_active" : "" }` } onSubmit={ handleSubmit }>
           <input
-            className={ `options-field__input ${ roomTitleValue !== props.roomInfo.title ? "options-field__input_active" : "" }` }
+            className={ `options-field__input ${ roomTitleValue !== roomInfo.title ? "options-field__input_active" : "" }` }
             type="text"
             value={ roomTitleValue }
             onChange={ handleInputValue }
             ref={ input }
           />
           <button
-            type={ `${ roomTitleValue == props.roomInfo.title ? "button" : "submit" }` }
+            type={ `${ roomTitleValue == roomInfo.title ? "button" : "submit" }` }
             className={ `options-field__title-button` }
-            onClick={ roomTitleValue !== props.roomInfo.title ? null : handlePencilClick }
+            onClick={ roomTitleValue !== roomInfo.title ? null : handlePencilClick }
           >
             <img
               className="options-field__icon"
-              src={ roomTitleValue == props.roomInfo.title ? pencil : checkMark }
+              src={ roomTitleValue == roomInfo.title ? pencil : checkMark }
               alt="Кнопка редактирования"
             />
           </button>
@@ -72,7 +81,7 @@ function OptionsField(props) {
           <button type="button" onClick={ props.handleOpenCreateRoomPopup } className="options-field__add-buddys-button"></button>
         </div>
         {
-          props.roomInfo.member_set.map(user => <Userbar userInfo={ user } />)
+          roomInfo.member_set.map((user, index) => <Userbar key={ index } userInfo={ user } />)
         }
       </div>
     </section>
