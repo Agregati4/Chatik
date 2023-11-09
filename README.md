@@ -11,7 +11,7 @@
 ## Как запустить?
 *По техническим причинам backend-часть проекта сейчас не работает, уже работаем над этим*
 
-Демонстрация работы:
+### Демонстрация работы:
 ![image](https://github.com/Agregati4/Chatik/assets/117747237/ce134d55-5f62-4f3e-981f-eebe49bc61fb)
 ![image](https://github.com/Agregati4/Chatik/assets/117747237/6b784604-bcaa-42db-9f4a-10a9953de20d)
 ![image](https://github.com/algoritmi4/Chatik/assets/117747237/8a28fa66-e701-4177-ae69-60fd45810e55)
