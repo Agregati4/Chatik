@@ -8,6 +8,7 @@ import { reducer as signButtonTextsReducer } from "./Slices/signButtonTextsSlice
 import { reducer as popupsReducer } from "./Slices/popupsSlice";
 import { reducer as notificationReducer } from "./Slices/notificationSlice";
 import { reducer as roomInfoReducer } from "./Slices/roomInfoSlice";
+import { reducer as isPageReadyReducer } from "./Slices/isPageReadySlice";
 
 const rootReducer = combineReducers({
   currentUser: currentUserReducer,
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   popups: popupsReducer,
   notification: notificationReducer,
   roomInfo: roomInfoReducer,
+  isPageReady: isPageReadyReducer,
   [apiSlice.reducerPath]: apiSlice.reducer,
 })
 

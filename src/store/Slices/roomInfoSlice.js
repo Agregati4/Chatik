@@ -5,6 +5,7 @@ const initialState = {
   roomInfo: {
     title: '',
     avatar: logo,
+    member_set: [],
   },
   isLoading: false,
   error: null,

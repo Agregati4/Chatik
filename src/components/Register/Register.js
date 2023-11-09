@@ -9,7 +9,7 @@ import { useActions } from '../../store/Hooks/useActions';
 import { createRef } from 'react';
 import HandleSignIn from '../../customFunctions/HandleSignIn';
 
-function Register(props) {
+function Register() {
   const navigate = useNavigate();
   const formRef = createRef();
   const { handleInputChange, isFormValid, values, errors } = FormValidation(

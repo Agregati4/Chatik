@@ -8,7 +8,7 @@ function Navigation() {
 
   return (
     <nav className="navigation">
-      <Link to={ `/requests/${ currentUser.id }`} className={ `navigation__link ${ requests.length < 1 ? "display-none" : "" }` }>
+      <Link to={ `/requests/${ currentUser.id }` } className={ `navigation__link ${ requests.length < 1 ? "display-none" : "" }` }>
         <div className="navigation__bell-image"></div>
         <div className="navigation__requests-length">{ requests.length }</div>
       </Link>

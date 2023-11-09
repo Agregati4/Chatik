@@ -1,17 +1,18 @@
 import { useEffect } from 'react';
 import './App.css';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import Chat from '../Chat/Chat';
-import Contacts from '../Contacts/Contacts';
+import ChatPage from '../ChatPage/ChatPage';
+import ContactsPage from '../ContactsPage/ContactsPage';
 import Login from '../Login/Login';
 import Register from '../Register/Register';
-import Profile from '../Profile/Profile';
-import Friends from '../Friends/Friends';
-import Options from '../Options/Options';
+import ProfilePage from '../ProfilePage/ProfilePage';
+import FriendsPage from '../FriendsPage/FriendsPage';
+import RoomOptionsPage from '../RoomOptionsPage/RoomOptionsPage';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import ProtectedSignRoutes from '../ProtectedSignRoutes/ProtectedSignRoutes';
-import RequestsPage from '../RequestsPage/RequestsPage';
+import FriendRequestsPage from '../FriendRequestsPage/FriendRequestsPage';
 import UserValidation from '../../customFunctions/UserValidation';
+import Header from '../Header/Header';
 
 function App() {
   const location = useLocation();
@@ -25,32 +26,31 @@ function App() {
   return (
     <div className={ `page ${ isPageDisplayNone ? "display-none" : "" }` }>
       <div className="page__content">
+        <Header />
         <Routes>
           <Route path="/chat/:roomId" element={ <ProtectedRoute element={
-            <Chat />
+            <ChatPage />
           } /> } />
           <Route path='/' element={ <ProtectedRoute element={
-            <Contacts />
+            <ContactsPage />
           } /> } />
           <Route path='/signin' element={ <ProtectedSignRoutes element={
             <Login />
-          } />
-          } />
+          } /> } />
           <Route path='/signup' element={ <ProtectedSignRoutes element={
             <Register />
-          } />
-          } />
+          } /> } />
           <Route path='/profile/:userId' element={ <ProtectedRoute element={
-            <Profile />
+            <ProfilePage />
           } /> } />
           <Route path='/friends/:userId' element={ <ProtectedRoute element={
-            <Friends />
+            <FriendsPage />
           } /> } />
           <Route path='/options/:roomId' element={ <ProtectedRoute element={
-            <Options />
+            <RoomOptionsPage />
           } /> } />
           <Route path='/requests/:userId' element={ <ProtectedRoute element={
-            <RequestsPage />
+            <FriendRequestsPage />
           } /> } />
         </Routes>
       </div>

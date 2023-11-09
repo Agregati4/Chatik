@@ -9,6 +9,7 @@ import { actions as signButtonTextsActions } from "../Slices/signButtonTextsSlic
 import { actions as popupsActions } from "../Slices/popupsSlice";
 import { actions as notificationActions } from "../Slices/notificationSlice";
 import { actions as roomInfoActions } from "../Slices/roomInfoSlice";
+import { actions as isPageReadyActions } from "../Slices/isPageReadySlice";
 
 const rootActions = {
   ...currentUserActions,
@@ -19,6 +20,7 @@ const rootActions = {
   ...popupsActions,
   ...notificationActions,
   ...roomInfoActions,
+  ...isPageReadyActions,
 }
 
 export const useActions = () => {

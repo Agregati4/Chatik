@@ -1,0 +1,13 @@
+.room-options-page {
+  min-width: 700px;
+  background-color: #323232;
+  border-radius: 25px;
+  height: 92vh;
+  overflow-y: auto;
+  padding: 55px 0;
+  box-sizing: border-box;
+}
+
+.room-options-page::-webkit-scrollbar {
+  width: 1px;
+}
