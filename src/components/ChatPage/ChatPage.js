@@ -69,9 +69,9 @@ function ChatPage() {
   function addDateChangeNotesInMessageList(messagesToAdd) {
     for(let i = 1; i < messagesToAdd.length; i++) {
       if (new Date(messagesToAdd[i].created_at.substring(0, 10)) < new Date(messagesToAdd[i-1].created_at.substring(0, 10))) {
-        const date = new Date(messagesToAdd[i].created_at);
+        const date = new Date(messagesToAdd[i-1].created_at);
         const month = date.toLocaleString('default', { month: 'short' })
-        messagesToAdd[i].newDate = `${ date.getDate() } ${ month }`;
+        messagesToAdd[i-1].newDate = `${ date.getDate() } ${ month }`;
       }
     }
   }
