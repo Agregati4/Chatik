@@ -14,5 +14,5 @@
 ### Демонстрация работы:
 ![image](https://github.com/Agregati4/Chatik/assets/117747237/ce134d55-5f62-4f3e-981f-eebe49bc61fb)
 ![image](https://github.com/algoritmi4/Chatik/assets/117747237/9f863db8-7258-4d31-89a0-e4e2d8355f96)
-![image](https://github.com/algoritmi4/Chatik/assets/117747237/8a28fa66-e701-4177-ae69-60fd45810e55)
+![image](https://github.com/algoritmi4/Chatik/assets/117747237/ce317912-bdb6-41ef-9c61-91262a9b2248)
 ![image](https://github.com/algoritmi4/Chatik/assets/117747237/1ea0cb29-7f53-4280-bfa3-87f6a52bc327)
